@@ -39,8 +39,22 @@ createNewAccBtn.addEventListener("click", () => {
 
 })
 
-createNewAccForm.addEventListener("submit", (e) => {
+createNewAccForm.addEventListener("submit", async (e) => {
 
     e.preventDefault();
+
+    const accountName = document.querySelector("#accountName");
+    const accountBalance = document.querySelector("#accountBalance");
+
+    await fetch('/api/createnewaccount', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        }, 
+        body: JSON.stringify({
+            name: accountName.value,
+            balance: accountBalance.value
+        })
+    })
 
 })
