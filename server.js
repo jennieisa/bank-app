@@ -52,6 +52,13 @@ app.post('/api/createnewaccount', async (req, res) => {
 //Route för att ta bort pengar från konto (tänk på att det inte ska gå att ta bort mer än det finns)
 
 //Route för att ta bort kontot helt
+app.delete('/api/accounts/account/:id/deleteaccount', async (req, res) => {
+
+    const account = await accountsCollection.deleteOne({ _id: ObjectId(req.params.id) });
+
+    res.json(account);
+
+})
 
 /*ROUTES FÖR USERS*/
 
