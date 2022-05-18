@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <h1>Banken</h1>
+    <main>
+        <button class="createNewAccBtn">Skapa nytt konto</button>
+        <form action="/api/createnewaccount" method="post" class="createNewAccForm hidden">
+            <label for="accountName">Namn på konto:</label>
+            <br>
+            <input type="text" id="accountName">
+            <br>
+            <label for="accountBalance">Saldo:</label>
+            <br>
+            <input type="number" id="accountBalance">
+            <br>
+            <button>Skapa</button>
+            <button>Avbryt</button>
+        </form>
+        <ul class="accountList">
+
+        </ul>
+    </main>
+
+    <script src="/javascript/main.js"></script>
+</body>
+</html>
