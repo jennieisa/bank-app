@@ -15,9 +15,9 @@ const accountTemplate = (account) => `
         <button data-function="addMoney" data-accountid="${account._id}">Sätt in pengar</button>
         <button data-function="takeOutMoney" data-accountid="${account._id}">Ta ut pengar</button>
         <button data-function="deleteAccount" data-accountid="${account._id}">Avsluta konto</button>
-        <form action="/api/accounts/:id/changebalance" data-accountid="${account._id}" method="post" class="changeAmountForm hidden">
+        <form data-accountid="${account._id}" class="changeAmountForm hidden">
             <label for="amount">Belopp:</label>
-            <input type="number" id="amount">
+            <input type="number" id="amount" data-accountid="${account._id}">
             <button data-function="updateBalance" data-accountid="${account._id}" class="updateBalanceBtn"></button>
         </form>
     </li>
@@ -119,7 +119,22 @@ const deleteAccount = async (e) => {
 //Funktion för att ändra saldot på kontot 
 const updateBalance = async (e) => {
 
-    const inputAmount = parseInt(document.querySelector("#amount").value);
+    e.preventDefault();
+
+    const amounts = document.querySelectorAll("#amount");
+
+    let inputBalance;
+
+    amounts.forEach(input => {
+
+        if (input.dataset.accountid === e.target.dataset.accountid) {
+
+            inputBalance = input.value;
+        }
+
+    })
+
+    console.log(inputBalance, e.target.dataset.accountid)
 
     await fetch(`/api/accounts/account/${e.target.dataset.accountid}/changebalance`, {
 
@@ -128,10 +143,12 @@ const updateBalance = async (e) => {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-            balance: inputAmount
+            balance: inputBalance
         })
 
     });
+
+    window.location.reload();
 
 }
 
@@ -146,6 +163,9 @@ const addButtonListeners = () => {
 
     const takeOutMoneyBtns = document.querySelectorAll('[data-function="takeOutMoney"]');
     takeOutMoneyBtns.forEach( btn => btn.addEventListener('click', drawChangeBalanceForm));
+
+    const updateBalanceBtns = document.querySelectorAll('[data-function="updateBalance"]');
+    updateBalanceBtns.forEach( btn => btn.addEventListener('click', updateBalance));
 
 };
 

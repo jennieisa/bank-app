@@ -48,7 +48,7 @@ app.post('/api/createnewaccount', async (req, res) => {
 })
 
 //Route för att lägga till mer pengar på konto eller ta ut 
-app.post('/api/accounts/:id/changebalance', async (req, res) => {
+app.post('/api/accounts/account/:id/changebalance', async (req, res) => {
 
     console.log(req.body.balance)
 
