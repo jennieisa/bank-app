@@ -224,35 +224,6 @@ const updateBalance = async (e) => {
 
         window.location.reload();
     }
-
-    /*
-    if (result === true) {
-
-        withdrawalAccount(changeAccountBalanceItem, inputBalance, e.target.dataset.accountid)
-
-        /*
-        await fetch(`/api/accounts/account/${e.target.dataset.accountid}/changebalance`, {
-
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                balance: inputBalance
-            })
-    
-        });
-
-        window.location.reload();
-
-    } else {
-
-        window.location.reload();
-
-        alert('Du kan inte ta ut mer pengar än du har på kontot.')
-
-    }
-    */
 }
 
 //Skapar eventlisterners på knapparna 

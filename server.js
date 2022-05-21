@@ -76,10 +76,61 @@ app.delete('/api/accounts/account/:id/deleteaccount', async (req, res) => {
 /*ROUTES FÖR USERS (VG)*/
 
 //Route för att skapa ny användare
+app.post('/api/register', async (req, res) => {
+
+    await usersCollection.insertOne({
+        user: req.body.user,
+        pass: req.body.pass
+    })
+
+    res.json({
+        success: true,
+        user: req.body.user
+    })
+})
 
 //Route för att logga in
+app.post('/api/login', async (req, res) => {
+
+    const findUser = await usersCollection.findOne({
+        user: req.body.user,
+        pass: req.body.pass
+    })
+
+    if (findUser) {
+        req.session.user = findUser.user;
+
+        res.json({
+            user: findUser.user
+        })
+    } else {
+        console.log(req.body.user, req.body.pass)
+        res.status(401).json({ error: 'Unauthorized' });
+    }
+
+})
 
 //Route för att kontrollera om personen är inloggad 
+app.get('/api/loggedin', (req, res) => {
+
+    if (req.session.user) {
+        res.json({
+            user: req.session.user
+        });
+    } else {
+        res.status(401).json({ error: 'Unauthorized '});
+    }
+
+})
+
+//Route för att logga ut 
+app.post('/api/loggedout', async (req, res) => {
+    req.session.destroy(() => {
+        res.json({
+            logedin: false
+        });
+    });
+})
 
 app.listen(port, () => {
 

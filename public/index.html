@@ -10,22 +10,48 @@
 <body>
     <h1>Banken</h1>
     <main>
-        <button class="createNewAccBtn">Skapa nytt konto</button>
-        <form action="/api/createnewaccount" method="post" class="createNewAccForm hidden">
-            <label for="accountName">Namn på konto:</label>
-            <br>
-            <input type="text" id="accountName">
-            <br>
-            <label for="accountBalance">Saldo:</label>
-            <br>
-            <input type="number" id="accountBalance">
-            <br>
-            <button type="submit" onclick="window.location.href='/'">Skapa</button>
-            <button type="button" onclick="window.location.href='/'">Avbryt</button>
-        </form>
-        <ul class="accountList">
-
-        </ul>
+        <section>
+            <form class="loginForm" action="/api/login" method="post">
+                <label for="username">Användarnamn:</label>
+                <input id="username" type="text">
+                <br>
+                <label for="pass">Lösenord:</label>
+                <input id="pass" type="password">
+                <br>
+                <button type="submit">Logga in</button>
+            </form>
+            <button>Skapa ny användare</button>
+            <form action="/api/register" method="post" class="registerForm">
+                <label for="registerUsername">Användarnamn:</label>
+                <input type="text" id="registerUsername">
+                <br>
+                <label for="registerPass">Lösenord:</label>
+                <input type="password" id="registerPass">
+                <br>
+                <button type="submit">Skapa ny användare</button>
+            </form>
+            <form class="logoutForm" action="/api/loggedout" method="post">
+                <button type="submit">Logga ut</button>
+            </form>
+        </section>
+        <section>
+            <button class="createNewAccBtn">Skapa nytt konto</button>
+            <form action="/api/createnewaccount" method="post" class="createNewAccForm hidden">
+                <label for="accountName">Namn på konto:</label>
+                <br>
+                <input type="text" id="accountName">
+                <br>
+                <label for="accountBalance">Saldo:</label>
+                <br>
+                <input type="number" id="accountBalance">
+                <br>
+                <button type="submit" onclick="window.location.href='/'">Skapa</button>
+                <button type="button" onclick="window.location.href='/'">Avbryt</button>
+            </form>
+            <ul class="accountList">
+    
+            </ul>
+        </section>
     </main>
 
     <script src="/javascript/main.js"></script>
