@@ -47,9 +47,16 @@ app.post('/api/createnewaccount', async (req, res) => {
     });
 })
 
-//Route för att lägga till mer pengar på konto 
+//Route för att lägga till mer pengar på konto eller ta ut 
+app.post('/api/accounts/:id/changebalance', async (req, res) => {
 
-//Route för att ta bort pengar från konto (tänk på att det inte ska gå att ta bort mer än det finns)
+    console.log(req.body.balance)
+
+    const account = await accountsCollection.updateOne({ _id: ObjectId(req.params.id)}, { $set: { balance: req.body.balance} });
+
+    res.json(account);
+
+})
 
 //Route för att ta bort kontot helt
 app.delete('/api/accounts/account/:id/deleteaccount', async (req, res) => {
@@ -60,7 +67,7 @@ app.delete('/api/accounts/account/:id/deleteaccount', async (req, res) => {
 
 })
 
-/*ROUTES FÖR USERS*/
+/*ROUTES FÖR USERS (VG)*/
 
 //Route för att skapa ny användare
 

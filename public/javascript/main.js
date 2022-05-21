@@ -1,6 +1,8 @@
-const accountList = document.querySelector(".accountList");
-const createNewAccBtn = document.querySelector(".createNewAccBtn");
-const createNewAccForm = document.querySelector(".createNewAccForm");
+const accountList = document.querySelector('.accountList');
+const createNewAccBtn = document.querySelector('.createNewAccBtn');
+const createNewAccForm = document.querySelector('.createNewAccForm');
+
+let changeAccountBalanceItem = null;
 
 let accounts = [];
 
@@ -12,28 +14,33 @@ const accountTemplate = (account) => `
         <p>Saldo: ${account.balance} kr</p>
         <button data-function="addMoney" data-accountid="${account._id}">Sätt in pengar</button>
         <button data-function="takeOutMoney" data-accountid="${account._id}">Ta ut pengar</button>
-        <button data-function="deleteAccount" data-accountid=${account._id}>Avsluta konto</button>
+        <button data-function="deleteAccount" data-accountid="${account._id}">Avsluta konto</button>
+        <form action="/api/accounts/:id/changebalance" data-accountid="${account._id}" method="post" class="changeAmountForm hidden">
+            <label for="amount">Belopp:</label>
+            <input type="number" id="amount">
+            <button data-function="updateBalance" data-accountid="${account._id}" class="updateBalanceBtn"></button>
+        </form>
     </li>
 `;
 
 //Visar formulär om vi klickar på skapa nytt konto 
-createNewAccBtn.addEventListener("click", () => {
+createNewAccBtn.addEventListener('click', () => {
 
-    createNewAccForm.style.display = "block";
+    createNewAccForm.classList.add('show');
 
-    accountList.style.display = "none";
+    accountList.classList.add('hidden');
 
-    createNewAccBtn.style.display = "none";
+    createNewAccBtn.classList.add('hidden');
 
 })
 
-//
-createNewAccForm.addEventListener("submit", async (e) => {
+//Eventlisterner för att skapa nytt konto
+createNewAccForm.addEventListener('submit', async (e) => {
 
     e.preventDefault();
 
-    const accountName = document.querySelector("#accountName");
-    const accountBalance = document.querySelector("#accountBalance");
+    const accountName = document.querySelector('#accountName');
+    const accountBalance = document.querySelector('#accountBalance');
 
     await fetch('/api/createnewaccount', {
         method: 'POST',
@@ -55,14 +62,51 @@ const drawAccounts = async () => {
     accounts = await res.json();
 
     accountList.innerHTML = accounts.map(accountTemplate).join('');
+
     addButtonListeners();
 
 }
 
 drawAccounts();
 
+//Funktion som ritar ut rätt formulär 
+const drawChangeBalanceForm = (account) => {
+
+    const changeAmountForm = document.querySelectorAll('.changeAmountForm');
+ 
+    changeAmountForm.forEach(form => {
+
+        if (account.target.dataset.accountid === form.dataset.accountid) {
+        
+            form.classList.remove('hidden');
+
+            const updateBalanceBtns = document.querySelectorAll('[data-function="updateBalance"]');
+
+            updateBalanceBtns.forEach(btn => {
+
+                if (account.target.dataset.accountid === btn.dataset.accountid) {
+
+                    if (account.target.dataset.function === 'addMoney') {
+                        
+                        btn.innerText = 'Lägg till';
+
+                    } else if (account.target.dataset.function === 'takeOutMoney') {
+
+                        btn.innerText = 'Ta ut';
+
+                    } 
+
+                }
+
+            })
+        }
+    })
+}
+
 //Funktion som tar bort bankkonto
 const deleteAccount = async (e) => {
+
+    console.log(e.target.dataset.accountid)
 
     await fetch(`/api/accounts/account/${e.target.dataset.accountid}/deleteaccount`, {
         method: 'DELETE'
@@ -72,27 +116,37 @@ const deleteAccount = async (e) => {
 
 }
 
-//Funktion som tar ut pengar från konto
+//Funktion för att ändra saldot på kontot 
+const updateBalance = async (e) => {
 
+    const inputAmount = parseInt(document.querySelector("#amount").value);
 
-//Funktion som sätter in pengar på kontot
+    await fetch(`/api/accounts/account/${e.target.dataset.accountid}/changebalance`, {
 
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            balance: inputAmount
+        })
+
+    });
+
+}
 
 //Skapar eventlisterners på knapparna 
 const addButtonListeners = () => {
 
-    const deleteBtns = document.querySelectorAll('[data-function="deleteAccount"');
+    const deleteBtns = document.querySelectorAll('[data-function="deleteAccount"]');
     deleteBtns.forEach( btn => btn.addEventListener('click', deleteAccount));
 
-    console.log(deleteBtns)
+    const addMoneyBtns = document.querySelectorAll('[data-function="addMoney"]');
+    addMoneyBtns.forEach( btn => btn.addEventListener('click', drawChangeBalanceForm));
 
-    /*
     const takeOutMoneyBtns = document.querySelectorAll('[data-function="takeOutMoney"]');
-    takeOutMoneyBtns.forEach( btn => btn.addEventListener('click', withdrawalAccount));
+    takeOutMoneyBtns.forEach( btn => btn.addEventListener('click', drawChangeBalanceForm));
 
-    const addMoneyBtns = document.querySelectorAll('data-function="addMoney"]');
-    addMoneyBtns.forEach( btn => btn.addEventListener('click', depositAccount));
-    */
-}
+};
 
 
