@@ -32,6 +32,14 @@ app.get('/api/accounts', async (req, res) => {
 
 })
 
+//Route för att hämta ett specifikt konto 
+app.get('/api/accounts/account/:id', async (req, res) => {
+
+    let account = await accountsCollection.findOne({ _id: ObjectId(req.params.id)});
+
+    res.json(account);
+})
+
 //Route för att lägga till ett nytt konto 
 app.post('/api/createnewaccount', async (req, res) => {
 
@@ -49,8 +57,6 @@ app.post('/api/createnewaccount', async (req, res) => {
 
 //Route för att lägga till mer pengar på konto eller ta ut 
 app.post('/api/accounts/account/:id/changebalance', async (req, res) => {
-
-    console.log(req.body.balance)
 
     const account = await accountsCollection.updateOne({ _id: ObjectId(req.params.id)}, { $set: { balance: req.body.balance} });
 

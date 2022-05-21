@@ -69,6 +69,17 @@ const drawAccounts = async () => {
 
 drawAccounts();
 
+//Hämtar ett specifikt konto
+const getAccount = async (id) => {
+
+    const res = await fetch(`/api/accounts/account/${id}`);
+
+    const account = await res.json();
+
+    return account;
+
+}
+
 //Funktion som ritar ut rätt formulär 
 const drawChangeBalanceForm = (account) => {
 
@@ -116,10 +127,66 @@ const deleteAccount = async (e) => {
 
 }
 
+//Funktion som kollar om det går att ta ut så mycket pengar 
+const withdrawalPossible = (balance, amount) => {
+
+    const sum = balance - amount;
+
+    if (sum < 0) {
+        return false;
+    } else {
+        return true;
+    }
+
+}
+
+//Funktion som tar bort pengar från kontot 
+const withdrawalAccount = async (balance, amount, id) => {
+
+    const sum = parseInt(balance) - parseInt(amount);
+
+    await fetch(`/api/accounts/account/${id}/changebalance`, {
+
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            balance: sum
+        })
+
+    });
+
+}
+
+//Funktion som lägger till pengar på kontot 
+const depositAccount = async (balance, amount, id) => {
+
+    const sum = parseInt(balance) + parseInt(amount); 
+
+    
+    await fetch(`/api/accounts/account/${id}/changebalance`, {
+
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            balance: sum
+        })
+
+    });
+
+}
+
 //Funktion för att ändra saldot på kontot 
 const updateBalance = async (e) => {
 
     e.preventDefault();
+
+    const account = await getAccount(e.target.dataset.accountid);
+
+    changeAccountBalanceItem = account.balance;
 
     const amounts = document.querySelectorAll("#amount");
 
@@ -134,22 +201,58 @@ const updateBalance = async (e) => {
 
     })
 
-    console.log(inputBalance, e.target.dataset.accountid)
+    if (e.target.innerText === 'Ta ut') {
 
-    await fetch(`/api/accounts/account/${e.target.dataset.accountid}/changebalance`, {
+        const result = withdrawalPossible(changeAccountBalanceItem, inputBalance);
 
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            balance: inputBalance
-        })
+        if (result) {
 
-    });
+            withdrawalAccount(changeAccountBalanceItem, inputBalance, e.target.dataset.accountid)
 
-    window.location.reload();
+            window.location.reload();
 
+        } else {
+
+            window.location.reload();
+
+            alert('Du kan inte ta ut mer pengar än du har på kontot.')
+        }
+
+    } else {
+
+        depositAccount(changeAccountBalanceItem, inputBalance, e.target.dataset.accountid);
+
+        window.location.reload();
+    }
+
+    /*
+    if (result === true) {
+
+        withdrawalAccount(changeAccountBalanceItem, inputBalance, e.target.dataset.accountid)
+
+        /*
+        await fetch(`/api/accounts/account/${e.target.dataset.accountid}/changebalance`, {
+
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                balance: inputBalance
+            })
+    
+        });
+
+        window.location.reload();
+
+    } else {
+
+        window.location.reload();
+
+        alert('Du kan inte ta ut mer pengar än du har på kontot.')
+
+    }
+    */
 }
 
 //Skapar eventlisterners på knapparna 
