@@ -75,6 +75,7 @@ const checkLogedin = async () => {
     if (data.user) {
         loginForm.classList.add('hidden');
         logoutForm.classList.add('show');
+        drawAccounts();
     } else {
         logoutForm.classList.add('hidden');
     }
@@ -148,8 +149,6 @@ const drawAccounts = async () => {
     addButtonListeners();
 
 }
-
-drawAccounts();
 
 //Hämtar ett specifikt konto
 const getAccount = async (id) => {
