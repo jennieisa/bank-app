@@ -27,14 +27,6 @@ app.use(session({
 
 /*ROUTES FÖR USERS (VG)*/
 
-const restrict = (req, res, next) => {
-    if (req.session.user) {
-        next();
-    } else {
-        res.status(401).send({ error: 'Unauthorized' });
-    }
-}
-
 //Route för att logga in
 app.post('/api/login', async (req, res) => {
 

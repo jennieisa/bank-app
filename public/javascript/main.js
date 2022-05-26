@@ -1,14 +1,16 @@
 const accountList = document.querySelector('.accountList');
 const createNewAccBtn = document.querySelector('.createNewAccBtn');
+const createNewAccSection = document.querySelector('.createNewAccSection');
 const createNewAccForm = document.querySelector('.createNewAccForm');
 const loginForm = document.querySelector('.loginForm');
 const username = document.querySelector('#username');
 const pass = document.querySelector('#pass');
-const logoutForm = document.querySelector(".logoutForm");
-const welcomemessage = document.querySelector(".welcomemessage");
-const registerForm = document.querySelector(".registerForm");
-const registerUsername = document.querySelector("#registerUsername");
-const registerPass = document.querySelector("#registerPass");
+const logoutForm = document.querySelector('.logoutForm');
+const regsiterUserBtn = document.querySelector('.regsiterUserBtn');
+const registerForm = document.querySelector('.registerForm');
+const registerUsername = document.querySelector('#registerUsername');
+const registerPass = document.querySelector('#registerPass');
+const welcomeUser = document.querySelector('.welcomeUser');
 
 /*ANVÄNDARE*/
 
@@ -32,6 +34,12 @@ loginForm.addEventListener('submit', async (e) => {
 
     location.reload();
 
+})
+
+//RITA UT REGISTRERA FORMULÄRET
+regsiterUserBtn.addEventListener('click', () => {
+    registerForm.classList.remove('hidden');
+    regsiterUserBtn.classList.add('hidden');
 })
 
 //LOGGA UT
@@ -75,9 +83,12 @@ const checkLogedin = async () => {
     if (data.user) {
         loginForm.classList.add('hidden');
         logoutForm.classList.add('show');
+        regsiterUserBtn.classList.add('hidden');
+        welcomeUser.innerText = 'Användare: ' + data.user;
         drawAccounts();
     } else {
         logoutForm.classList.add('hidden');
+        createNewAccSection.classList.add('hidden');
     }
 }
 

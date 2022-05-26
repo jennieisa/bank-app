@@ -10,6 +10,7 @@
 <body>
     <h1>Banken</h1>
     <main>
+        <h2 class="welcomeUser"></h2>
         <section>
             <form class="loginForm" action="/api/login" method="post">
                 <label for="username">Användarnamn:</label>
@@ -21,8 +22,8 @@
                 <button type="submit">Logga in</button>
             </form>
             <br>
-            <button>Skapa ny användare</button>
-            <form action="/api/register" method="post" class="registerForm">
+            <button class="regsiterUserBtn">Skapa ny användare</button>
+            <form action="/api/register" method="post" class="registerForm hidden">
                 <label for="registerUsername">Användarnamn:</label>
                 <input type="text" id="registerUsername">
                 <br>
@@ -37,7 +38,7 @@
             </form>
             <br>
         </section>
-        <section>
+        <section class="createNewAccSection">
             <button class="createNewAccBtn">Skapa nytt konto</button>
             <form action="/api/createnewaccount" method="post" class="createNewAccForm hidden">
                 <label for="accountName">Namn på konto:</label>
