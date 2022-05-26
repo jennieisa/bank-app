@@ -1,6 +1,88 @@
 const accountList = document.querySelector('.accountList');
 const createNewAccBtn = document.querySelector('.createNewAccBtn');
 const createNewAccForm = document.querySelector('.createNewAccForm');
+const loginForm = document.querySelector('.loginForm');
+const username = document.querySelector('#username');
+const pass = document.querySelector('#pass');
+const logoutForm = document.querySelector(".logoutForm");
+const welcomemessage = document.querySelector(".welcomemessage");
+const registerForm = document.querySelector(".registerForm");
+const registerUsername = document.querySelector("#registerUsername");
+const registerPass = document.querySelector("#registerPass");
+
+/*ANVÄNDARE*/
+
+//LOGGA IN
+loginForm.addEventListener('submit', async (e) => {
+
+    e.preventDefault();
+
+    console.log(username.value, pass.value)
+
+    await fetch('/api/login', {
+        method: 'POST', 
+        headers: {
+            'Content-Type': 'application/json'
+        }, 
+        body: JSON.stringify({
+            user: username.value,
+            pass: pass.value
+        })
+    })
+
+    location.reload();
+
+})
+
+//LOGGA UT
+logoutForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    await fetch('api/loggedout', {
+        method: 'POST'
+    });
+
+    location.reload();
+})
+
+//REGISTRERA ANVÄNDARE
+registerForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const res = await fetch('/api/register', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            user: registerUsername.value,
+            pass: registerPass.value
+        })
+    })
+
+    const data = await res.json();
+
+    location.reload();
+
+    alert(`Tack för att du registrerat dig ${data.user}`)
+})
+
+//KOLLA OM ANVÄNDARE ÄR INLOGGAD
+const checkLogedin = async () => {
+    const res = await fetch('/api/loggedin');
+    const data = await res.json();
+
+    if (data.user) {
+        loginForm.classList.add('hidden');
+        logoutForm.classList.add('show');
+    } else {
+        logoutForm.classList.add('hidden');
+    }
+}
+
+checkLogedin();
+
+/*KONTON*/
 
 let changeAccountBalanceItem = null;
 
